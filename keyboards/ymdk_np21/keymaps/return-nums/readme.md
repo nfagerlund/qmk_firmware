@@ -1,6 +1,7 @@
-# default
+# return-nums
 
-The default keymap for the YMDK NP21 keypad.
+It's a numpad, but since macOS doesn't respect the enter key, it uses return. 
+That's the only change from default. 
 
     Base Layer                               Function Layer
                  .-----.                                  .-----.
