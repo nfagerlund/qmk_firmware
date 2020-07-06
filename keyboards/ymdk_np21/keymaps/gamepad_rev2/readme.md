@@ -1,6 +1,6 @@
 # gamepad_rev2
 
-Some wasd shit. Using what I've learned from 
+Some wasd shit. Using what I've learned from having numpad remapped previously.
 
     Base Layer                               Function Layer
                  .-----.                                  .-----.
