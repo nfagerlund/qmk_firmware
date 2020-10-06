@@ -10,7 +10,7 @@
 #define _CL_MAC 4
 
 // Simple custom keycodes
-#define NF_CMAC LM(_CL_MAC, MOD_RCTRL)
+#define NF_CMAC LM(_CL_MAC, MOD_LCTRL)
 
 // Tricky custom keycodes
 enum alt_keycodes {
@@ -89,7 +89,7 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
             return false;
         case NF_GRV:
             if (record->event.pressed) {
-                del_mods(MOD_BIT(KC_RCTRL));
+                del_mods(MOD_BIT(KC_LCTRL));
                 register_code(KC_GRV);
             }
             return true;
