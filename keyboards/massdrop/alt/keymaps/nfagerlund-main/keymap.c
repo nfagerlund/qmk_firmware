@@ -1,10 +1,18 @@
 #include QMK_KEYBOARD_H
 
+// Layer names
 #define _DV_WIN 0
 #define _QW_MAC 1
 #define _FN 2
+// Capslock on win: oddball emacs stuff, plus esc/~ toggle.
 #define _CL_WIN 3
+// Capslock on mac: ctrl key, except for esc/~ toggle.
+#define _CL_MAC 4
 
+// Simple custom keycodes
+#define NF_CMAC LM(_CL_MAC, MOD_RCTRL)
+
+// Tricky custom keycodes
 enum alt_keycodes {
     U_T_AUTO = SAFE_RANGE, //USB Extra Port Toggle Auto Detect / Always Active
     U_T_AGCR,              //USB Toggle Automatic GCR control
@@ -13,7 +21,8 @@ enum alt_keycodes {
     DBG_KBD,               //DEBUG Toggle Keyboard Prints
     DBG_MOU,               //DEBUG Toggle Mouse Prints
     MD_BOOT,               //Restart into bootloader after hold timeout
-    EM_KILL,               //Select to end of line, then ctrl+x (windows)
+    NF_KILL,               //Select to end of line, then ctrl+x (windows)
+    NF_GRV,                //Do esc/~ toggle but remove ctrl modifier
 };
 
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
@@ -27,7 +36,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     [_QW_MAC] = LAYOUT_65_ansi_blocker(
         KC_ESC,  KC_1,    KC_2,    KC_3,    KC_4,    KC_5,    KC_6,    KC_7,    KC_8,    KC_9,    KC_0,    KC_MINS, KC_EQL,  KC_BSPC, KC_DEL,  \
         KC_TAB,  KC_Q,    KC_W,    KC_E,    KC_R,    KC_T,    KC_Y,    KC_U,    KC_I,    KC_O,    KC_P,    KC_LBRC, KC_RBRC, KC_BSLS, KC_HOME, \
-        KC_LCTL, KC_A,    KC_S,    KC_D,    KC_F,    KC_G,    KC_H,    KC_J,    KC_K,    KC_L,    KC_SCLN, KC_QUOT,          KC_ENT,  KC_PGUP, \
+        NF_CMAC, KC_A,    KC_S,    KC_D,    KC_F,    KC_G,    KC_H,    KC_J,    KC_K,    KC_L,    KC_SCLN, KC_QUOT,          KC_ENT,  KC_PGUP, \
         KC_LSFT, KC_Z,    KC_X,    KC_C,    KC_V,    KC_B,    KC_N,    KC_M,    KC_COMM, KC_DOT,  KC_SLSH, KC_RSFT,          KC_UP,   KC_PGDN, \
         MO(_FN), KC_LALT, KC_LGUI,                            KC_SPC,                             KC_RGUI, KC_RALT, KC_LEFT, KC_DOWN, KC_RGHT  \
     ),
@@ -42,7 +51,14 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
         KC_GRV,  _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, C(KC_BSPC), C(KC_DEL), \
         _______, _______, _______, _______, KC_UP,   _______, KC_RGHT, _______, _______, _______, _______, _______, _______, _______, _______, \
         _______, KC_HOME, _______, KC_END,  _______, _______, _______, _______, _______, KC_DOWN, _______, _______,          _______, _______, \
-        _______, _______, _______, _______, EM_KILL, _______, KC_LEFT, _______, _______, _______, _______, _______,          _______, _______, \
+        _______, _______, _______, _______, NF_KILL, _______, KC_LEFT, _______, _______, _______, _______, _______,          _______, _______, \
+        _______, _______, _______,                            _______,                            _______, _______, _______, _______, _______  \
+    ),
+    [_CL_MAC] = LAYOUT_65_ansi_blocker(
+        NF_GRV,  _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, \
+        _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, \
+        _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______,          _______, _______, \
+        _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______,          _______, _______, \
         _______, _______, _______,                            _______,                            _______, _______, _______, _______, _______  \
     ),
 
@@ -65,12 +81,18 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
     static uint32_t key_timer;
 
     switch (keycode) {
-        case EM_KILL:
+        case NF_KILL:
             if (record->event.pressed) {
                 SEND_STRING(SS_DOWN(X_LSFT)SS_TAP(X_END)SS_UP(X_LSFT)SS_LCTL("x"));
                 // https://github.com/qmk/qmk_firmware/blob/master/quantum/send_string_keycodes.h
             }
             return false;
+        case NF_GRV:
+            if (record->event.pressed) {
+                del_mods(MOD_BIT(KC_RCTRL));
+                register_code(KC_GRV);
+            }
+            return true;
         case U_T_AUTO:
             if (record->event.pressed && MODS_SHIFT && MODS_CTRL) {
                 TOGGLE_FLAG_AND_PRINT(usb_extra_manual, "USB extra port manual mode");
