@@ -91,6 +91,8 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
             if (record->event.pressed) {
                 del_mods(MOD_BIT(KC_LCTRL));
                 register_code(KC_GRV);
+            } else {
+                unregister_code(KC_GRV);
             }
             return true;
         case U_T_AUTO:
