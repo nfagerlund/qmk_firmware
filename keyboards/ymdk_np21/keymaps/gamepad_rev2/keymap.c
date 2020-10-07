@@ -87,3 +87,11 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     ),
 
 };
+
+// Handle beddy-bye time
+void suspend_power_down_user(void) {
+    backlight_disable();
+}
+void suspend_wakeup_init_user(void) {
+    backlight_enable();
+}
