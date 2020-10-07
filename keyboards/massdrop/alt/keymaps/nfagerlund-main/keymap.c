@@ -13,7 +13,7 @@
 #define _CL_MAC 5
 
 // Simple custom keycodes
-#define NF_CMAC LM(_CL_MAC, MOD_LCTRL)
+#define NF_CMAC LM(_CL_MAC, MOD_LCTL)
 
 // Tricky custom keycodes
 enum alt_keycodes {
