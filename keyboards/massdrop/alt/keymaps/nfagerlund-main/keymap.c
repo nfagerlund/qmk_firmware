@@ -110,11 +110,19 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
             return true;
         case NF_DV:
             if (record->event.pressed && MODS_OTHER_FN) {
+                // default_layer_set(1UL<<_DV_WIN);
+                // or:
+                // set_single_persistent_default_layer(_DV_WIN);
+                // or:
                 tap_code16(DF(_DV_WIN));
             }
             return true;
         case NF_QW:
             if (record->event.pressed && MODS_OTHER_FN) {
+                // default_layer_set(1UL<<_QW_MAC);
+                // or:
+                // set_single_persistent_default_layer(_QW_MAC);
+                // or:
                 tap_code16(DF(_QW_MAC));
             }
             return true;
