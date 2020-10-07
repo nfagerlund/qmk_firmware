@@ -8,20 +8,18 @@ enum layer_names {
 };
 
 // BTW, these shouldn't affect numpad mode because that uses like KC_P1 instead of KC_1.
-// Chunks of 5 for easy counting
 const uint16_t PROGMEM combo_12[]   = {KC_1, KC_2, COMBO_END};
 const uint16_t PROGMEM combo_23[]   = {KC_2, KC_3, COMBO_END};
 const uint16_t PROGMEM combo_13[]   = {KC_1, KC_3, COMBO_END};
-const uint16_t PROGMEM combo_123[]  = {KC_1, KC_2, KC_3, COMBO_END};
-const uint16_t PROGMEM combo_1g[]   = {KC_1, KC_G, COMBO_END};
 
+const uint16_t PROGMEM combo_1g[]   = {KC_1, KC_G, COMBO_END};
 const uint16_t PROGMEM combo_2c[]   = {KC_2, KC_C, COMBO_END};
 const uint16_t PROGMEM combo_3r[]   = {KC_3, KC_R, COMBO_END};
-const uint16_t PROGMEM combo_gc[]   = {KC_G, KC_C, COMBO_END};
-const uint16_t PROGMEM combo_cr[]   = {KC_C, KC_R, COMBO_END};
-const uint16_t PROGMEM combo_gr[]   = {KC_G, KC_R, COMBO_END};
 
-const uint16_t PROGMEM combo_gcr[]  = {KC_G, KC_C, KC_R, COMBO_END};
+const uint16_t PROGMEM combo_tab1[] = {KC_TAB, KC_1, COMBO_END};
+const uint16_t PROGMEM combo_tab2[] = {KC_TAB, KC_2, COMBO_END};
+const uint16_t PROGMEM combo_tab3[] = {KC_TAB, KC_3, COMBO_END};
+
 const uint16_t PROGMEM combo_tabg[] = {KC_TAB, KC_G, COMBO_END};
 const uint16_t PROGMEM combo_tabc[] = {KC_TAB, KC_C, COMBO_END};
 const uint16_t PROGMEM combo_tabr[] = {KC_TAB, KC_R, COMBO_END};
@@ -31,17 +29,15 @@ combo_t key_combos[COMBO_COUNT] = {
     COMBO(combo_12,   KC_4),
     COMBO(combo_23,   KC_5),
     COMBO(combo_13,   KC_6),
-    COMBO(combo_123,  KC_7),
-    COMBO(combo_1g,   KC_8),
-    COMBO(combo_2c,   KC_9),
-    COMBO(combo_3r,   KC_0),
-    COMBO(combo_gc,   KC_F1),
-    COMBO(combo_cr,   KC_F2),
-    COMBO(combo_gr,   KC_F3),
-    COMBO(combo_gcr,  KC_F4),
-    COMBO(combo_tabg, KC_F5),
-    COMBO(combo_tabc, KC_F6),
-    COMBO(combo_tabr, KC_F7),
+    COMBO(combo_1g,   KC_7),
+    COMBO(combo_2c,   KC_8),
+    COMBO(combo_3r,   KC_9),
+    COMBO(combo_tabg, KC_F1),
+    COMBO(combo_tabc, KC_F2),
+    COMBO(combo_tabr, KC_F3),
+    COMBO(combo_tab1, KC_F4),
+    COMBO(combo_tab2, KC_F5),
+    COMBO(combo_tab3, KC_F6),
 };
 
 // enum custom_keycodes {
@@ -70,7 +66,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 
     [_F_WASD] = LAYOUT_ortho_6x4(
         KC_ESC,  KC_H,    KC_LALT, _______,
-        _______, KC_I,    _______, KC_ENT,
+        KC_0,    KC_I,    _______, KC_ENT,
         _______, _______, _______, KC_BSPC,
         BL_BRTG, _______, _______, KC_BSPC,
         BL_TOGG, BL_DEC,  BL_INC,  _______,
