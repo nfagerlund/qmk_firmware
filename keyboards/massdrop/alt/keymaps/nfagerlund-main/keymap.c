@@ -50,14 +50,14 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
         _______, RGB_SPD, RGB_VAI, RGB_SPI, RGB_HUI, RGB_SAI, _______, U_T_AUTO,U_T_AGCR,_______, KC_PSCR, KC_SLCK, KC_PAUS, _______, KC_END,  \
         _______, RGB_RMOD,RGB_VAD, RGB_MOD, RGB_HUD, RGB_SAD, _______, _______, _______, _______, _______, _______,          _______, KC_VOLU, \
         _______, RGB_TOG, _______, _______, _______, MD_BOOT, NK_TOGG, DBG_TOG, _______, _______, _______, _______,          KC_PGUP, KC_VOLD, \
-        _______, _______, _______,                            DF(_QW_MAC),                              _______, _______, C(KC_LEFT), KC_PGDN, C(KC_RGHT)  \
+        _______, _______, _______,                            NF_QW,                              _______, _______, C(KC_LEFT), KC_PGDN, C(KC_RGHT)  \
     ),
     [_FM] = LAYOUT_65_ansi_blocker(
         KC_ESC,  KC_F1,   KC_F2,   KC_F3,   KC_F4,   KC_F5,   KC_F6,   KC_F7,   KC_F8,   KC_F9,   KC_F10,  KC_F11,  KC_F12,  _______, KC_MUTE, \
         _______, RGB_SPD, RGB_VAI, RGB_SPI, RGB_HUI, RGB_SAI, _______, U_T_AUTO,U_T_AGCR,_______, KC_PSCR, KC_SLCK, KC_PAUS, _______, KC_END,  \
         _______, RGB_RMOD,RGB_VAD, RGB_MOD, RGB_HUD, RGB_SAD, _______, _______, _______, _______, _______, _______,          _______, KC_VOLU, \
         _______, RGB_TOG, _______, _______, _______, MD_BOOT, NK_TOGG, DBG_TOG, _______, _______, _______, _______,          KC_PGUP, KC_VOLD, \
-        _______, _______, _______,                            DF(_DV_WIN),                              _______, _______, KC_HOME, KC_PGDN, KC_END   \
+        _______, _______, _______,                            NF_DV,                              _______, _______, KC_HOME, KC_PGDN, KC_END   \
     ),
     [_CL_WIN] = LAYOUT_65_ansi_blocker(
         KC_ESC,  _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, C(KC_BSPC), C(KC_DEL), \
@@ -108,16 +108,16 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
                 unregister_code(KC_ESC);
             }
             return true;
-        // case NF_DV:
-        //     if (record->event.pressed && MODS_OTHER_FN) {
-        //         tap_code(DF(_DV_WIN));
-        //     }
-        //     return true;
-        // case NF_QW:
-        //     if (record->event.pressed && MODS_OTHER_FN) {
-        //         tap_code(DF(_QW_MAC));
-        //     }
-        //     return true;
+        case NF_DV:
+            if (record->event.pressed && MODS_OTHER_FN) {
+                tap_code16(DF(_DV_WIN));
+            }
+            return true;
+        case NF_QW:
+            if (record->event.pressed && MODS_OTHER_FN) {
+                tap_code16(DF(_QW_MAC));
+            }
+            return true;
         case U_T_AUTO:
             if (record->event.pressed && MODS_SHIFT && MODS_CTRL) {
                 TOGGLE_FLAG_AND_PRINT(usb_extra_manual, "USB extra port manual mode");
