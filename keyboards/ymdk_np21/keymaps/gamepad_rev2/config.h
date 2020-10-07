@@ -1,5 +1,5 @@
 #include "config_common.h"
 
 #define TAPPING_TERM 200
-#define COMBO_COUNT 9
+#define COMBO_COUNT 12
 #define RGBLIGHT_SLEEP
