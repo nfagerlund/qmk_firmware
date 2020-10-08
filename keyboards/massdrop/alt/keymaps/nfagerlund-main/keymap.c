@@ -120,22 +120,22 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
             return true;
         case NF_DV:
             if (record->event.pressed && MODS_OTHER_FN) {
-                // default_layer_set(1UL<<_DV_WIN);
+                default_layer_set(1UL<<_DV_WIN);
                 // or:
                 // set_single_persistent_default_layer(_DV_WIN);
                 // or:
-                tap_code16(DF(_DV_WIN));
+                // tap_code16(DF(_DV_WIN));
             }
-            return true;
+            return false;
         case NF_QW:
             if (record->event.pressed && MODS_OTHER_FN) {
-                // default_layer_set(1UL<<_QW_MAC);
+                default_layer_set(1UL<<_QW_MAC);
                 // or:
                 // set_single_persistent_default_layer(_QW_MAC);
                 // or:
-                tap_code16(DF(_QW_MAC));
+                // tap_code16(DF(_QW_MAC));
             }
-            return true;
+            return false;
         case U_T_AUTO:
             if (record->event.pressed && MODS_SHIFT && MODS_CTRL) {
                 TOGGLE_FLAG_AND_PRINT(usb_extra_manual, "USB extra port manual mode");
