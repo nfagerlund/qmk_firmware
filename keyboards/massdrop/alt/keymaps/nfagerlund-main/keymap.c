@@ -30,6 +30,16 @@ enum alt_keycodes {
     NF_QW,                 //Switch default layouts
 };
 
+// Combos
+const uint16_t PROGMEM combo_jk[]   = {KC_J, KC_K, COMBO_END};
+const uint16_t PROGMEM combo_bt1[]  = {KC_GRV, KC_1, COMBO_END};
+
+// Assign combos
+combo_t key_combos[COMBO_COUNT] = {
+    COMBO(combo_jk, KC_ESC),
+    COMBO(combo_bt1, KC_ESC),
+};
+
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     [_DV_WIN] = LAYOUT_65_ansi_blocker(
         KC_GRV,      KC_1,    KC_2,    KC_3,    KC_4,    KC_5,    KC_6,    KC_7,    KC_8,    KC_9,    KC_0,    KC_LBRC, KC_RBRC, KC_BSPC, KC_DEL,  \
