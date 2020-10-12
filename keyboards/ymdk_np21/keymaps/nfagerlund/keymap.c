@@ -103,4 +103,5 @@ layer_state_t default_layer_state_set_user(layer_state_t state) {
     if (biton32(state) == WASD) {
         layer_off(PENT_MODE);
     }
+    return state;
 }
