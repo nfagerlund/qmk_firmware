@@ -1,14 +1,16 @@
 #include QMK_KEYBOARD_H
 
 // Layer names
-#define _DV_WIN 0
-#define _QW_MAC 1
-// Fn on win
-#define _FW 2
-// Fn on mac
-#define _FM 3
-// Capslock on win: oddball emacs stuff, plus esc/~ toggle.
-#define _CL_WIN 4
+enum nf_layers {
+    _DV_WIN,
+    _QW_MAC,
+    // Fn on win
+    _FW,
+    // Fn on mac
+    _FM,
+    // Capslock on win: oddball emacs stuff, plus esc/~ toggle.
+    _CL_WIN,
+};
 
 // Tricky custom keycodes
 enum alt_keycodes {
