@@ -24,6 +24,7 @@ enum alt_keycodes {
 };
 
 // Combos
+// "Smash escape:" hit `/~ and 1 at the same time to type Esc without using fn.
 const uint16_t PROGMEM combo_bt1[]  = {KC_GRV, KC_1, COMBO_END};
 
 // Assign combos
