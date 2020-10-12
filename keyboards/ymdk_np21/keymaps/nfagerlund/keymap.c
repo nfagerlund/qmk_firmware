@@ -73,6 +73,9 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
         KC_ENT,  _______, DF(NUMPAD), _______
     ),
 
+    // TODO: Make fn+enter toggle a middle layer with KC_PENT, and implement
+    // layer_state_set_user() to always turn that layer off when switching to
+    // wasd mode.
     [F_NP] = LAYOUT_ortho_6x4(
         _______, _______, _______,  _______,
         _______, _______, _______,  _______,
