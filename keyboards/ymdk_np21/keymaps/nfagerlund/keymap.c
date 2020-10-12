@@ -3,6 +3,7 @@
 enum layer_names {
     WASD,
     NUMPAD,
+    PENT_MODE,
     F_WASD,
     F_NP,
 };
@@ -64,6 +65,16 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
         KC_P0,   KC_DOT,  KC_PDOT, KC_ENT
     ),
 
+    // If you want real "numpad enter" instead of a return key.
+    [PENT_MODE] = LAYOUT_ortho_6x4(
+        _______, _______, _______, _______,
+        _______, _______, _______, _______,
+        _______, _______, _______, _______,
+        _______, _______, _______, _______,
+        _______, _______, _______, KC_PENT,
+        _______, _______, _______, KC_PENT
+    ),
+
     [F_WASD] = LAYOUT_ortho_6x4(
         KC_ESC,  KC_H,    KC_LALT, _______,
         KC_0,    KC_I,    _______, KC_ENT,
@@ -73,16 +84,23 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
         KC_ENT,  _______, DF(NUMPAD), _______
     ),
 
-    // TODO: Make fn+enter toggle a middle layer with KC_PENT, and implement
-    // layer_state_set_user() to always turn that layer off when switching to
-    // wasd mode.
     [F_NP] = LAYOUT_ortho_6x4(
         _______, _______, _______,  _______,
         _______, _______, _______,  _______,
         _______, _______, _______,  _______,
         BL_BRTG, _______, _______,  _______,
-        BL_TOGG, BL_DEC,  BL_INC,   KC_PENT,
-        _______, _______, DF(WASD), KC_PENT
+        BL_TOGG, BL_DEC,  BL_INC,   TG(PENT_MODE),
+        _______, _______, DF(WASD), TG(PENT_MODE)
     ),
 
 };
+
+// Switch off numpad-enter mode when returning to wasd!
+// Note that the argument to this function is the new *default layer mask*
+// (which usually only has one bit set), not the full layer state for the entire
+// stack.
+layer_state_t default_layer_state_set_user(layer_state_t state) {
+    if (biton32(state) == WASD) {
+        layer_off(PENT_MODE);
+    }
+}
