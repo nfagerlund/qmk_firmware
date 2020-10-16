@@ -25,11 +25,11 @@ enum alt_keycodes {
 
 // Combos
 // "Smash escape:" hit `/~ and 1 at the same time to type Esc without using fn.
-const uint16_t PROGMEM combo_bt1[]  = {KC_GRV, KC_1, COMBO_END};
+const uint16_t PROGMEM combo_grv1[]  = {KC_GRV, KC_1, COMBO_END};
 
 // Assign combos
 combo_t key_combos[COMBO_COUNT] = {
-    COMBO(combo_bt1, KC_ESC),
+    COMBO(combo_grv1, KC_ESC),
 };
 
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
