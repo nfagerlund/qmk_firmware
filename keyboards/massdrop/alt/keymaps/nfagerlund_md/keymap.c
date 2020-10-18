@@ -1,5 +1,15 @@
 #include QMK_KEYBOARD_H
 
+// Layer names
+enum nf_layers {
+    DVORAK_WIN,
+    QWERTY_MAC,
+    F_WIN,
+    F_MAC,
+    CAP_WIN,    // Makes capslock on Windows act like ctrl on Mac.
+};
+
+// Tricky custom keycodes
 enum alt_keycodes {
     L_BRI = SAFE_RANGE, //LED Brightness Increase
     L_BRD,              //LED Brightness Decrease
@@ -24,12 +34,23 @@ enum alt_keycodes {
     DBG_KBD,            //DEBUG Toggle Keyboard Prints
     DBG_MOU,            //DEBUG Toggle Mouse Prints
     DBG_FAC,            //DEBUG Factory light testing (All on white)
-    MD_BOOT             //Restart into bootloader after hold timeout
+    MD_BOOT,            //Restart into bootloader after hold timeout
+
+    NF_KILL,               //Select to end of line, then ctrl+x (windows)
+    NF_DV,                 //Switch default layouts
+    NF_QW,                 //Switch default layouts
 };
 
 #define TG_NKRO MAGIC_TOGGLE_NKRO //Toggle 6KRO / NKRO mode
 
-keymap_config_t keymap_config;
+// Combos
+// "Smash escape:" hit `/~ and 1 at the same time to type Esc without using fn.
+const uint16_t PROGMEM combo_grv1[]  = {KC_GRV, KC_1, COMBO_END};
+
+// Assign combos
+combo_t key_combos[COMBO_COUNT] = {
+    COMBO(combo_grv1, KC_ESC),
+};
 
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     [0] = LAYOUT(
