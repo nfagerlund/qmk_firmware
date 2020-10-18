@@ -112,7 +112,7 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
     switch (keycode) {
         case NF_KILL:
             if (record->event.pressed) {
-                SEND_STRING(SS_DOWN(X_LSFT)SS_TAP(X_END)SS_UP(X_LSFT)SS_LCTL("x"));
+                SEND_STRING(SS_DOWN(X_LSFT)SS_TAP(X_END)SS_UP(X_LSFT)SS_LCTRL("x"));
                 // https://github.com/qmk/qmk_firmware/blob/master/quantum/send_string_keycodes.h
             }
             return false;
