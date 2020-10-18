@@ -103,12 +103,38 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 #define MODS_SHIFT (get_mods() & MOD_BIT(KC_LSHIFT) || get_mods() & MOD_BIT(KC_RSHIFT))
 #define MODS_CTRL (get_mods() & MOD_BIT(KC_LCTL) || get_mods() & MOD_BIT(KC_RCTRL))
 #define MODS_ALT (get_mods() & MOD_BIT(KC_LALT) || get_mods() & MOD_BIT(KC_RALT))
+#define MODS_OTHER_FN (get_mods() & MOD_BIT(KC_RALT) || get_mods() & MOD_BIT(KC_LCTL))
 
 bool process_record_user(uint16_t keycode, keyrecord_t *record) {
     static uint32_t key_timer;
     static uint8_t scroll_effect = 0;
 
     switch (keycode) {
+        case NF_KILL:
+            if (record->event.pressed) {
+                SEND_STRING(SS_DOWN(X_LSFT)SS_TAP(X_END)SS_UP(X_LSFT)SS_LCTL("x"));
+                // https://github.com/qmk/qmk_firmware/blob/master/quantum/send_string_keycodes.h
+            }
+            return false;
+        case NF_DV:
+            if (record->event.pressed && MODS_OTHER_FN) {
+                default_layer_set(1UL<<DVORAK_WIN);
+                // or:
+                // set_single_persistent_default_layer(DVORAK_WIN);
+                // or:
+                // tap_code16(DF(DVORAK_WIN));
+            }
+            return false;
+        case NF_QW:
+            if (record->event.pressed && MODS_OTHER_FN) {
+                default_layer_set(1UL<<QWERTY_MAC);
+                // or:
+                // set_single_persistent_default_layer(QWERTY_MAC);
+                // or:
+                // tap_code16(DF(QWERTY_MAC));
+            }
+            return false;
+
         case L_BRI:
             if (record->event.pressed) {
                 if (LED_GCR_STEP > LED_GCR_MAX - gcr_desired) gcr_desired = LED_GCR_MAX;
