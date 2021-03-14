@@ -4,8 +4,7 @@
 enum nf_layers {
     DVORAK_WIN,
     QWERTY_MAC,
-    F_WIN,
-    F_MAC,
+    F_ALL,
     CAP_WIN,    // Makes capslock on Windows act like ctrl on Mac.
 };
 
@@ -19,8 +18,7 @@ enum alt_keycodes {
     DBG_MOU,               //DEBUG Toggle Mouse Prints
     MD_BOOT,               //Restart into bootloader after hold timeout
     NF_KILL,               //Select to end of line, then ctrl+x (windows)
-    NF_DV,                 //Switch default layouts
-    NF_QW,                 //Switch default layouts
+    NF_FLIP,               //Switch default layouts
 };
 
 // Combos
@@ -38,28 +36,21 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
         KC_TAB,      KC_QUOT, KC_COMM, KC_DOT,  KC_P,    KC_Y,    KC_F,    KC_G,    KC_C,    KC_R,    KC_L,    KC_SLSH, KC_EQL,  KC_BSLS, KC_HOME, \
         MO(CAP_WIN), KC_A,    KC_O,    KC_E,    KC_U,    KC_I,    KC_D,    KC_H,    KC_T,    KC_N,    KC_S,    KC_MINS,          KC_ENT,  KC_PGUP, \
         KC_LSFT,     KC_SCLN, KC_Q,    KC_J,    KC_K,    KC_X,    KC_B,    KC_M,    KC_W,    KC_V,    KC_Z,    KC_RSFT,          KC_UP,   KC_PGDN, \
-        KC_LCTL,     KC_LGUI, KC_LALT,                            KC_SPC,                             KC_RCTL, MO(F_WIN), KC_LEFT, KC_DOWN, KC_RGHT  \
+        KC_LCTL,     KC_LGUI, KC_LALT,                            KC_SPC,                             KC_RCTL, MO(F_ALL), KC_LEFT, KC_DOWN, KC_RGHT  \
     ),
     [QWERTY_MAC] = LAYOUT_65_ansi_blocker(
         KC_GRV,  KC_1,    KC_2,    KC_3,    KC_4,    KC_5,    KC_6,    KC_7,    KC_8,    KC_9,    KC_0,    KC_MINS, KC_EQL,  KC_BSPC, KC_DEL,  \
         KC_TAB,  KC_Q,    KC_W,    KC_E,    KC_R,    KC_T,    KC_Y,    KC_U,    KC_I,    KC_O,    KC_P,    KC_LBRC, KC_RBRC, KC_BSLS, KC_HOME, \
         KC_LCTL, KC_A,    KC_S,    KC_D,    KC_F,    KC_G,    KC_H,    KC_J,    KC_K,    KC_L,    KC_SCLN, KC_QUOT,          KC_ENT,  KC_PGUP, \
         KC_LSFT, KC_Z,    KC_X,    KC_C,    KC_V,    KC_B,    KC_N,    KC_M,    KC_COMM, KC_DOT,  KC_SLSH, KC_RSFT,          KC_UP,   KC_PGDN, \
-        MO(F_MAC), KC_LALT, KC_LGUI,                          KC_SPC,                             KC_RGUI, KC_RALT, KC_LEFT, KC_DOWN, KC_RGHT  \
+        MO(F_ALL), KC_LALT, KC_LGUI,                          KC_SPC,                             KC_RGUI, KC_RALT, KC_LEFT, KC_DOWN, KC_RGHT  \
     ),
-    [F_WIN] = LAYOUT_65_ansi_blocker(
+    [F_ALL] = LAYOUT_65_ansi_blocker(
         KC_ESC,  KC_F1,   KC_F2,   KC_F3,   KC_F4,   KC_F5,   KC_F6,   KC_F7,   KC_F8,   KC_F9,   KC_F10,  KC_F11,  KC_F12,  C(KC_BSPC), KC_MUTE, \
         _______, RGB_SPD, RGB_VAI, RGB_SPI, RGB_HUI, RGB_SAI, _______, U_T_AUTO,U_T_AGCR,_______, KC_PSCR, KC_SLCK, KC_PAUS, _______, KC_END,  \
         _______, RGB_RMOD,RGB_VAD, RGB_MOD, RGB_HUD, RGB_SAD, _______, _______, _______, _______, _______, _______,          _______, KC_VOLU, \
         _______, RGB_TOG, _______, _______, _______, MD_BOOT, NK_TOGG, DBG_TOG, _______, _______, _______, _______,          KC_PGUP, KC_VOLD, \
-        _______, _______, _______,                            NF_QW,                              _______, _______, C(KC_LEFT), KC_PGDN, C(KC_RGHT)  \
-    ),
-    [F_MAC] = LAYOUT_65_ansi_blocker(
-        KC_ESC,  KC_F1,   KC_F2,   KC_F3,   KC_F4,   KC_F5,   KC_F6,   KC_F7,   KC_F8,   KC_F9,   KC_F10,  KC_F11,  KC_F12,  _______, KC_MUTE, \
-        _______, RGB_SPD, RGB_VAI, RGB_SPI, RGB_HUI, RGB_SAI, _______, U_T_AUTO,U_T_AGCR,_______, KC_PSCR, KC_SLCK, KC_PAUS, _______, KC_END,  \
-        _______, RGB_RMOD,RGB_VAD, RGB_MOD, RGB_HUD, RGB_SAD, _______, _______, _______, _______, _______, _______,          _______, KC_VOLU, \
-        _______, RGB_TOG, _______, _______, _______, MD_BOOT, NK_TOGG, DBG_TOG, _______, _______, _______, _______,          KC_PGUP, KC_VOLD, \
-        _______, _______, _______,                            NF_DV,                              _______, _______, KC_HOME, KC_PGDN, KC_END   \
+        _______, _______, _______,                            NF_FLIP,                            _______, _______, C(KC_LEFT), KC_PGDN, C(KC_RGHT)  \
     ),
     [CAP_WIN] = LAYOUT_65_ansi_blocker(
         KC_ESC,  _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, C(KC_BSPC), C(KC_DEL), \
@@ -95,22 +86,20 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
                 // https://github.com/qmk/qmk_firmware/blob/master/quantum/send_string_keycodes.h
             }
             return false;
-        case NF_DV:
+        case NF_FLIP:
+            // ctrl + fn + space: cycle default layers.
+            // (ctrl and fn are "as labeled," because mac layout moves modifiers around.)
             if (record->event.pressed && MODS_OTHER_FN) {
-                default_layer_set(1UL<<DVORAK_WIN);
+                switch(biton32(default_layer_state)) {
+                    case DVORAK_WIN:
+                        default_layer_set(1UL<<QWERTY_MAC);
+                        break;
+                    default:
+                        default_layer_set(1UL<<DVORAK_WIN);
+                        break;
+                }
                 // or:
                 // set_single_persistent_default_layer(DVORAK_WIN);
-                // or:
-                // tap_code16(DF(DVORAK_WIN));
-            }
-            return false;
-        case NF_QW:
-            if (record->event.pressed && MODS_OTHER_FN) {
-                default_layer_set(1UL<<QWERTY_MAC);
-                // or:
-                // set_single_persistent_default_layer(QWERTY_MAC);
-                // or:
-                // tap_code16(DF(QWERTY_MAC));
             }
             return false;
         case U_T_AUTO:
