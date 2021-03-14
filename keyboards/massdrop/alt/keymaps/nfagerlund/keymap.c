@@ -19,6 +19,7 @@ enum alt_keycodes {
     MD_BOOT,               //Restart into bootloader after hold timeout
     NF_KILL,               //Select to end of line, then ctrl+x (windows)
     NF_FLIP,               //Switch default layouts
+    NF_CTLO,               //Insert newline after cursor (windows)
 };
 
 // Combos
@@ -55,7 +56,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     [CAP_WIN] = LAYOUT_65_ansi_blocker(
         KC_ESC,  _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, C(KC_BSPC), C(KC_DEL), \
         _______, _______, _______, _______, KC_UP,   _______, KC_RGHT, _______, _______, _______, _______, _______, _______, _______, _______, \
-        _______, KC_HOME, _______, KC_END,  _______, _______, _______, _______, _______, KC_DOWN, _______, _______,          _______, _______, \
+        _______, KC_HOME, NF_CTLO, KC_END,  _______, _______, KC_DEL,  _______, _______, KC_DOWN, _______, _______,          _______, _______, \
         _______, _______, _______, _______, NF_KILL, _______, KC_LEFT, _______, _______, _______, _______, _______,          _______, _______, \
         _______, _______, _______,                            _______,                            _______, _______, _______, _______, _______  \
     ),
@@ -84,6 +85,11 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
             if (record->event.pressed) {
                 SEND_STRING(SS_DOWN(X_LSFT)SS_TAP(X_END)SS_UP(X_LSFT)SS_LCTL("x"));
                 // https://github.com/qmk/qmk_firmware/blob/master/quantum/send_string_keycodes.h
+            }
+            return false;
+        case NF_CTLO:
+            if (record->event.pressed) {
+                SEND_STRING(SS_TAP(X_ENTER)SS_TAP(X_HOME)SS_TAP(X_LEFT));
             }
             return false;
         case NF_FLIP:
