@@ -1,6 +1,6 @@
 # project specific files
 SRC = matrix.c
-SRC += config_led.c
+# SRC += config_led.c
 
 #For platform and packs
 ARM_ATSAM = SAMD51J18A
@@ -31,7 +31,8 @@ RAW_ENABLE = no             # Raw device
 AUTO_SHIFT_ENABLE = no      # Auto Shift
 
 # Custom RGB matrix handling
-RGB_MATRIX_ENABLE = yes
-RGB_MATRIX_DRIVER = custom
+# RGB_MATRIX_ENABLE = yes
+# RGB_MATRIX_DRIVER = custom
+RGB_MATRIX_ENABLE = no
 
 LAYOUTS = 65_ansi_blocker
