@@ -44,11 +44,26 @@ enum alt_keycodes {
 
 // Combos
 // "Smash escape:" hit `/~ and 1 at the same time to type Esc without using fn.
+// Play/pause: [ + ] (as marked)
+// Track back: P + [ (as marked)
+// Track forward: ] + \ (as marked)
 const uint16_t PROGMEM combo_grv1[]  = {KC_GRV, KC_1, COMBO_END};
+const uint16_t PROGMEM combo_double_bracket_qw[] = {KC_LBRC, KC_RBRC, COMBO_END};
+const uint16_t PROGMEM combo_double_bracket_dv[] = {KC_SLSH, KC_EQL, COMBO_END};
+const uint16_t PROGMEM combo_bracket_p_qw[] = {KC_P, KC_LBRC, COMBO_END};
+const uint16_t PROGMEM combo_bracket_p_dv[] = {KC_L, KC_SLSH, COMBO_END};
+const uint16_t PROGMEM combo_bracket_bs_qw[] = {KC_RBRC, KC_BSLS, COMBO_END};
+const uint16_t PROGMEM combo_bracket_bs_dv[] = {KC_EQL, KC_BSLS, COMBO_END};
 
 // Assign combos
 combo_t key_combos[COMBO_COUNT] = {
     COMBO(combo_grv1, KC_ESC),
+    COMBO(combo_double_bracket_qw, KC_MPLY),
+    COMBO(combo_double_bracket_dv, KC_MPLY),
+    COMBO(combo_bracket_p_qw, KC_MPRV),
+    COMBO(combo_bracket_p_dv, KC_MPRV),
+    COMBO(combo_bracket_bs_qw, KC_MNXT),
+    COMBO(combo_bracket_bs_dv, KC_MNXT),
 };
 
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
