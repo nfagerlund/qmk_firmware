@@ -66,6 +66,111 @@ combo_t key_combos[COMBO_COUNT] = {
     COMBO(combo_bracket_bs_dv, KC_MNXT),
 };
 
+// Set up swap-hands config -- this applies the swapped key positions to whatever the
+// current layer situation is, so as long as I manage to stay within the constraint
+// of "no swapping to invisible keys," it should save me some hassle.
+//
+// This value is a 2-dimensional array mapping from old column/row to new column/row,
+// but the outer structure is (row, col) and the inner types are (col, row). :dizzy:
+//
+// As per alt.h, we're 5x15 with "_" representing KC_NO in the non-existent slots:
+//
+// ` 1 2 3 4 5 6 7 8 9 0 - = < X
+// T q w e r t y u i o p [ ] \ H
+// C a s d f g h j k l ; ' _ R U
+// S _ z x c v b n m , . / S ^ D
+// ^ W A _ _ _ ! _ _ _ A F < v >
+//
+
+#define _SWD_GRAVE {0, 0}
+#define _SWD_1 {1, 0}
+#define _SWD_2 {2, 0}
+#define _SWD_3 {3, 0}
+#define _SWD_4 {4, 0}
+#define _SWD_5 {5, 0}
+#define _SWD_6 {6, 0}
+#define _SWD_7 {7, 0}
+#define _SWD_8 {8, 0}
+#define _SWD_9 {9, 0}
+#define _SWD_0 {10, 0}
+#define _SWD_HYPHEN {11, 0}
+#define _SWD_EQUALS {12, 0}
+#define _SWD_BACKSP {13, 0}
+#define _SWD_DEL {14, 0}
+
+#define _SWD_TAB {0, 1}
+#define _SWD_Q {1, 1}
+#define _SWD_W {2, 1}
+#define _SWD_E {3, 1}
+#define _SWD_R {4, 1}
+#define _SWD_T {5, 1}
+#define _SWD_Y {6, 1}
+#define _SWD_U {7, 1}
+#define _SWD_I {8, 1}
+#define _SWD_O {9, 1}
+#define _SWD_P {10, 1}
+#define _SWD_LBRC {11, 1}
+#define _SWD_RBRC {12, 1}
+#define _SWD_BACKSL {13, 1}
+#define _SWD_HOME {14, 1}
+
+#define _SWD_CAPS {0, 2}
+#define _SWD_A {1, 2}
+#define _SWD_S {2, 2}
+#define _SWD_D {3, 2}
+#define _SWD_F {4, 2}
+#define _SWD_G {5, 2}
+#define _SWD_H {6, 2}
+#define _SWD_J {7, 2}
+#define _SWD_K {8, 2}
+#define _SWD_L {9, 2}
+#define _SWD_SEMI {10, 2}
+#define _SWD_QUOT {11, 2}
+#define _SWD_NO_1 {12, 2}
+#define _SWD_RET {13, 2}
+#define _SWD_PGUP {14, 2}
+
+#define _SWD_LSHIFT {0, 3}
+#define _SWD_NO_2 {1, 3}
+#define _SWD_Z {2, 3}
+#define _SWD_X {3, 3}
+#define _SWD_C {4, 3}
+#define _SWD_V {5, 3}
+#define _SWD_B {6, 3}
+#define _SWD_N {7, 3}
+#define _SWD_M {8, 3}
+#define _SWD_COMMA {9, 3}
+#define _SWD_PERIOD {10, 3}
+#define _SWD_SLASH {11, 3}
+#define _SWD_RSHIFT {12, 3}
+#define _SWD_UP {13, 3}
+#define _SWD_PGDOWN {14, 3}
+
+#define _SWD_LCTRL {0, 4}
+#define _SWD_LWIN {1, 4}
+#define _SWD_LALT {2, 4}
+#define _SWD_NO_3 {3, 4}
+#define _SWD_NO_4 {4, 4}
+#define _SWD_NO_5 {5, 4}
+#define _SWD_SPACE {6, 4}
+#define _SWD_NO_6 {7, 4}
+#define _SWD_NO_7 {8, 4}
+#define _SWD_NO_8 {9, 4}
+#define _SWD_RALT {10, 4}
+#define _SWD_FN {11, 4}
+#define _SWD_LEFT {12, 4}
+#define _SWD_DOWN {13, 4}
+#define _SWD_RIGHT {14, 4}
+
+
+const keypos_t PROGMEM hand_swap_config[MATRIX_ROWS][MATRIX_COLS] = {
+    {_SWD_SLASH, _SWD_0, _SWD_9, _SWD_8, _SWD_7, _SWD_6, _SWD_6, _SWD_5, _SWD_4, _SWD_3, _SWD_2, _SWD_1, _SWD_GRAVE, _SWD_BACKSP, _SWD_DEL},
+    {_SWD_BACKSP, _SWD_P, _SWD_O, _SWD_I, _SWD_U, _SWD_Y, _SWD_T, _SWD_R, _SWD_E, _SWD_W, _SWD_Q, _SWD_LBRC, _SWD_RBRC, _SWD_BACKSL, _SWD_HOME},
+    {_SWD_RET, _SWD_SEMI, _SWD_L, _SWD_K, _SWD_J, _SWD_H, _SWD_G, _SWD_F, _SWD_D, _SWD_S, _SWD_A, _SWD_QUOT, _SWD_NO_1, _SWD_RET, _SWD_PGUP},
+    {_SWD_LSHIFT, _SWD_NO_2, _SWD_PERIOD, _SWD_COMMA, _SWD_M, _SWD_N, _SWD_B, _SWD_V, _SWD_C, _SWD_X, _SWD_Z, _SWD_SLASH, _SWD_RSHIFT, _SWD_UP, _SWD_PGDOWN},
+    {_SWD_LCTRL, _SWD_LWIN, _SWD_LALT, _SWD_NO_3, _SWD_NO_4, _SWD_NO_5, _SWD_SPACE, _SWD_NO_6, _SWD_NO_7, _SWD_NO_8, _SWD_RALT, _SWD_FN, _SWD_LEFT, _SWD_DOWN, _SWD_RIGHT},
+}
+
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     [DVORAK_WIN] = LAYOUT_65_ansi_blocker(
         KC_GRV,      KC_1,    KC_2,    KC_3,    KC_4,    KC_5,    KC_6,    KC_7,    KC_8,    KC_9,    KC_0,    KC_LBRC, KC_RBRC, KC_BSPC, KC_DEL,  \
