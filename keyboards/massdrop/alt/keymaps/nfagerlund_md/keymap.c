@@ -180,7 +180,7 @@ const keypos_t PROGMEM hand_swap_config[MATRIX_ROWS][MATRIX_COLS] = {
     {_SWD_RET, _SWD_SEMI, _SWD_L, _SWD_K, _SWD_J, _SWD_H, _SWD_G, _SWD_F, _SWD_D, _SWD_S, _SWD_A, _SWD_QUOT, _SWD_NO_1, _SWD_RET, _SWD_PGUP},
     {_SWD_LSHIFT, _SWD_NO_2, _SWD_PERIOD, _SWD_COMMA, _SWD_M, _SWD_N, _SWD_B, _SWD_V, _SWD_C, _SWD_X, _SWD_Z, _SWD_SLASH, _SWD_RSHIFT, _SWD_UP, _SWD_PGDOWN},
     {_SWD_LCTRL, _SWD_LWIN, _SWD_LALT, _SWD_NO_3, _SWD_NO_4, _SWD_NO_5, _SWD_SPACE, _SWD_NO_6, _SWD_NO_7, _SWD_NO_8, _SWD_RALT, _SWD_FN, _SWD_LEFT, _SWD_DOWN, _SWD_RIGHT},
-}
+};
 
 // Actual keyboard layouts!
 
