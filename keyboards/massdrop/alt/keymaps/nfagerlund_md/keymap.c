@@ -348,6 +348,35 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
                 layer_off(MAC_MODIFIER_OVERLAY);
             }
             return false;
+        case NF_STAR:
+            // subtle: inspect layers to decide which layers to activate, or else deactivate all of em.
+            if (record->event.pressed) {
+                bool is_dvorak = layer_state_is(DVORAK_WIN);
+                // dvorak or qwerty?
+                if (is_dvorak) {
+                    layer_on(DVORAK_MIRROR_EXTRA);
+                } else {
+                    layer_on(QWERTY_MIRROR_EXTRA);
+                }
+                // win or mac?
+                if (layer_state_is(MAC_MODIFIER_OVERLAY)) {
+                    if (is_dvorak) {
+                        layer_on(MAC_DVORAK_CTRL_NAV);
+                    } else {
+                        layer_on(MAC_QWERTY_CTRL_NAV);
+                    }
+                } else {
+                    layer_on(WIN_CTRL_NAV);
+                }
+            } else {
+                // releasing!
+                layer_off(DVORAK_MIRROR_EXTRA);
+                layer_off(QWERTY_MIRROR_EXTRA);
+                layer_off(WIN_CTRL_NAV);
+                layer_off(MAC_DVORAK_CTRL_NAV);
+                layer_off(MAC_QWERTY_CTRL_NAV);
+            }
+            return false;
         // case NF_FLIP:
         //     // ctrl + fn + space: cycle default layers.
         //     // (ctrl and fn are "as labeled," which is what the weird
