@@ -17,6 +17,11 @@ enum nf_layers {
                          // positions regardless.
 };
 
+// Override the default layer state on startup, so we aren't relying on the magic fallback to 0.
+void keyboard_post_init_user(void) {
+    default_layer_set(1UL<<DVORAK_WIN);
+}
+
 // Tricky custom keycodes
 enum alt_keycodes {
     L_BRI = SAFE_RANGE, //LED Brightness Increase
@@ -572,9 +577,9 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
 }
 
 // static color for indicator key lights
-#define IND_R 0
-#define IND_G 245
-#define IND_B 210
+#define IND_R 255
+#define IND_G 0
+#define IND_B 255
 
 led_instruction_t led_instructions[] = {
     //LEDs are normally inactive, no processing is performed on them
@@ -601,12 +606,12 @@ led_instruction_t led_instructions[] = {
     //     in hex, each of 8 digits is a 4-byte chunk. 1111 = f, 0111 = 7...
     // there are 67 key leds (0-66). the rest are edge... I think. they sometimes say "underglow."
 
-    // fn key (physical page down) always looks special.
+    // fn key (physical page down) always looks special. make it teal.
     // #57: bit 25 in id1, 0x02000000
     {
         .flags = LED_FLAG_MATCH_ID | LED_FLAG_USE_RGB,
         .id1 = 0x02000000,
-        .r = IND_R, .g = IND_G, .b = IND_B,
+        .r = 0, .g = 255, .b = 255,
     },
     // Layer indicators:
     // qwerty vs dvorak
@@ -633,21 +638,12 @@ led_instruction_t led_instructions[] = {
         .r = IND_R, .g = IND_G, .b = IND_B,
     },
 
-    // mac vs win: the annoying one, bc there's no win layer. so I need 3 rules.
+    // mac vs win: the annoying one, bc there's no win layer. due to the way the
+    // patterns are implemented, this turns out to actually be impossible. So we'll
+    // just indicate mac mode on/off.
+
     // win: #59, bit 27 in id1, 0x08000000
     // cmd: #60, bit 28 in id1, 0x10000000
-    // set win indicator unconditionally
-    {
-        .flags = LED_FLAG_MATCH_ID | LED_FLAG_USE_RGB,
-        .id1 = 0x08000000,
-        .r = IND_R, .g = IND_G, .b = IND_B,
-    },
-    // revert win to rotate pattern if mac
-    {
-        .flags = LED_FLAG_MATCH_ID | LED_FLAG_MATCH_LAYER | LED_FLAG_USE_ROTATE_PATTERN,
-        .layer = MAC_MODIFIER_OVERLAY,
-        .id1 = 0x08000000,
-    },
     // set mac indicator if mac
     {
         .flags = LED_FLAG_MATCH_ID | LED_FLAG_MATCH_LAYER | LED_FLAG_USE_RGB,
