@@ -2,10 +2,15 @@
 
 // Layer names
 enum nf_layers {
-    DVORAK_WIN,
-    QWERTY_MAC,
-    F_ALL,
-    CAP_WIN,    // Makes capslock on Windows act like ctrl on Mac.
+    DVORAK_WIN, // base layout (default)
+    QWERTY_WIN, // base layout (alternate)
+    MAC_MODIFIER_OVERLAY,  // changes the modifier keys to be mac style, for either base layout.
+    F_ALL, // modifier layer. function and meta keys.
+    CAP_WIN,    // modifier layer. Makes capslock on Windows act sorta like ctrl on Mac. always uses dvorak key locations.
+    DVORAK_MIRROR_OVERLAY, // Enable mirror-space and special ctrl-like stuff for dvorak.
+    QWERTY_MIRROR_OVERLAY, // Enable mirror-space and special ctrl-like stuff for qwerty.
+    DV_M_SP, // Dvorak mirror special. modifier layer. mirrorboard fixups and ctrl nav keys.
+    QW_M_SP, // Qwerty mirror special. modifier layer. mirrorboard fixups and ctrl nav keys.
 };
 
 // Tricky custom keycodes
@@ -35,9 +40,15 @@ enum alt_keycodes {
     DBG_FAC,            //DEBUG Factory light testing (All on white)
     MD_BOOT,            //Restart into bootloader after hold timeout
 
-    NF_KILL,               //Select to end of line, then ctrl+x (windows)
-    NF_FLIP,               //Switch default layouts
-    NF_CTLO,               //Insert newline after cursor (windows)
+    NF_KILL,               // Select to end of line, then ctrl+x (windows)
+    NF_CTLO,               // Insert newline after cursor (windows)
+
+    NF_DV,                 // Switch to Dvorak, no mirror
+    NF_QW,                 // Switch to Qwerty, no mirror
+    NF_DVMR,               // Switch to Dvorak, mirrorboard
+    NF_QWMR,               // Switch to Qwerty, mirrorboard
+    NF_MAC,                // Switch mac modifiers on
+    NF_WIN,                // Switch mac modifiers off
 };
 
 #define TG_NKRO MAGIC_TOGGLE_NKRO //Toggle 6KRO / NKRO mode
@@ -171,27 +182,37 @@ const keypos_t PROGMEM hand_swap_config[MATRIX_ROWS][MATRIX_COLS] = {
     {_SWD_LCTRL, _SWD_LWIN, _SWD_LALT, _SWD_NO_3, _SWD_NO_4, _SWD_NO_5, _SWD_SPACE, _SWD_NO_6, _SWD_NO_7, _SWD_NO_8, _SWD_RALT, _SWD_FN, _SWD_LEFT, _SWD_DOWN, _SWD_RIGHT},
 }
 
+// Actual keyboard layouts!
+
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     [DVORAK_WIN] = LAYOUT_65_ansi_blocker(
         KC_GRV,      KC_1,    KC_2,    KC_3,    KC_4,    KC_5,    KC_6,    KC_7,    KC_8,    KC_9,    KC_0,    KC_LBRC, KC_RBRC, KC_BSPC, KC_DEL,  \
         KC_TAB,      KC_QUOT, KC_COMM, KC_DOT,  KC_P,    KC_Y,    KC_F,    KC_G,    KC_C,    KC_R,    KC_L,    KC_SLSH, KC_EQL,  KC_BSLS, KC_HOME, \
-        MO(CAP_WIN), KC_A,    KC_O,    KC_E,    KC_U,    KC_I,    KC_D,    KC_H,    KC_T,    KC_N,    KC_S,    KC_MINS,          KC_ENT,  KC_PGUP, \
-        KC_LSFT,     KC_SCLN, KC_Q,    KC_J,    KC_K,    KC_X,    KC_B,    KC_M,    KC_W,    KC_V,    KC_Z,    KC_RSFT,          KC_UP,   KC_PGDN, \
-        KC_LCTL,     KC_LGUI, KC_LALT,                            KC_SPC,                             KC_RCTL, MO(F_ALL), KC_LEFT, KC_DOWN, KC_RGHT  \
+        MO(CAP_WIN), KC_A,    KC_O,    KC_E,    KC_U,    KC_I,    KC_D,    KC_H,    KC_T,    KC_N,    KC_S,    KC_MINS,          KC_ENT,  KC_PGDN, \
+        KC_LSFT,     KC_SCLN, KC_Q,    KC_J,    KC_K,    KC_X,    KC_B,    KC_M,    KC_W,    KC_V,    KC_Z,    KC_RSFT,          KC_UP,   MO(F_ALL), \
+        KC_LCTL,     KC_LGUI, KC_LALT,                            KC_SPC,                             KC_RALT, KC_RCTL, KC_LEFT, KC_DOWN, KC_RGHT  \
     ),
-    [QWERTY_MAC] = LAYOUT_65_ansi_blocker(
-        KC_GRV,  KC_1,    KC_2,    KC_3,    KC_4,    KC_5,    KC_6,    KC_7,    KC_8,    KC_9,    KC_0,    KC_MINS, KC_EQL,  KC_BSPC, KC_DEL,  \
-        KC_TAB,  KC_Q,    KC_W,    KC_E,    KC_R,    KC_T,    KC_Y,    KC_U,    KC_I,    KC_O,    KC_P,    KC_LBRC, KC_RBRC, KC_BSLS, KC_HOME, \
-        KC_LCTL, KC_A,    KC_S,    KC_D,    KC_F,    KC_G,    KC_H,    KC_J,    KC_K,    KC_L,    KC_SCLN, KC_QUOT,          KC_ENT,  KC_PGUP, \
-        KC_LSFT, KC_Z,    KC_X,    KC_C,    KC_V,    KC_B,    KC_N,    KC_M,    KC_COMM, KC_DOT,  KC_SLSH, KC_RSFT,          KC_UP,   KC_PGDN, \
-        MO(F_ALL), KC_LALT, KC_LGUI,                          KC_SPC,                             KC_RGUI, KC_RALT, KC_LEFT, KC_DOWN, KC_RGHT  \
+    [QWERTY_WIN] = LAYOUT_65_ansi_blocker(
+        KC_GRV,      KC_1,    KC_2,    KC_3,    KC_4,    KC_5,    KC_6,    KC_7,    KC_8,    KC_9,    KC_0,    KC_MINS, KC_EQL,  KC_BSPC, KC_DEL,  \
+        KC_TAB,      KC_Q,    KC_W,    KC_E,    KC_R,    KC_T,    KC_Y,    KC_U,    KC_I,    KC_O,    KC_P,    KC_LBRC, KC_RBRC, KC_BSLS, KC_HOME, \
+        MO(CAP_WIN), KC_A,    KC_S,    KC_D,    KC_F,    KC_G,    KC_H,    KC_J,    KC_K,    KC_L,    KC_SCLN, KC_QUOT,          KC_ENT,  KC_PGDN, \
+        KC_LSFT,     KC_Z,    KC_X,    KC_C,    KC_V,    KC_B,    KC_N,    KC_M,    KC_COMM, KC_DOT,  KC_SLSH, KC_RSFT,          KC_UP,   MO(F_ALL), \
+        KC_LCTL,     KC_LGUI, KC_LALT,                            KC_SPC,                             KC_RALT, KC_RCTL, KC_LEFT, KC_DOWN, KC_RGHT  \
+    ),
+    // swap cmd and opt. also mac can handle capslock bc there's a builtin remap option.
+    [MAC_MODIFIER_OVERLAY] = LAYOUT_65_ansi_blocker(
+        _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, \
+        _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, \
+        KC_CAPS, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______,          _______, _______, \
+        _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______,          _______, _______, \
+        _______, KC_LALT, KC_LGUI,                            _______,                            KC_RGUI, KC_RALT, _______, _______, _______  \
     ),
     [F_ALL] = LAYOUT_65_ansi_blocker(
         KC_ESC,  KC_F1,   KC_F2,   KC_F3,   KC_F4,   KC_F5,   KC_F6,   KC_F7,   KC_F8,   KC_F9,   KC_F10,  KC_F11,  KC_F12,  C(KC_BSPC), KC_MUTE, \
         L_T_BR,  L_PSD,   L_BRI,   L_PSI,   L_EDG_I, _______, _______, _______, U_T_AGCR,_______, KC_PSCR, KC_SLCK, KC_PAUS, _______, KC_END,  \
-        L_T_PTD, L_PTP,   L_BRD,   L_PTN,   L_EDG_D, _______, _______, _______, _______, _______, _______, _______,          _______, KC_VOLU, \
-        _______, L_T_MD,  L_T_ONF, _______, L_EDG_M, MD_BOOT, TG_NKRO, _______, _______, _______, _______, _______,          KC_PGUP, KC_VOLD, \
-        _______, _______, _______,                            NF_FLIP,                            _______, _______, C(KC_LEFT), KC_PGDN, C(KC_RGHT)  \
+        L_T_PTD, L_PTP,   L_BRD,   L_PTN,   L_EDG_D, _______, _______, _______, _______, _______, NF_QWMR, NF_DVMR,          _______, KC_PGUP, \
+        _______, L_T_MD,  L_T_ONF, _______, L_EDG_M, MD_BOOT, TG_NKRO, NF_MAC,  NF_WIN,  NF_QW,   NF_DV,   _______,          KC_VOLU, _______, \
+        _______, _______, _______,                            _______,                            _______, _______, _______, KC_VOLD, _______  \
     ),
     [CAP_WIN] = LAYOUT_65_ansi_blocker(
         KC_ESC,  KC_F1,   KC_F2,   KC_F3,   KC_F4,   KC_F5,   KC_F6,   KC_F7,   KC_F8,   KC_F9,   KC_F10,  KC_F11,  KC_F12,  C(KC_BSPC), C(KC_DEL), \
@@ -200,9 +221,39 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
         _______, _______, _______, _______, NF_KILL, _______, KC_LEFT, _______, _______, _______, _______, _______,          _______, _______, \
         _______, _______, _______,                            _______,                            _______, _______, _______, _______, _______  \
     ),
+    // space for mirror, caps and backslash for special
+    [DVORAK_MIRROR_OVERLAY] = LAYOUT_65_ansi_blocker(
+        _______,     _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, \
+        _______,     _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, MO(DV_M_SP), _______, \
+        MO(DV_M_SP), _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______,          _______, _______, \
+        _______,     _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______,          _______, _______, \
+        _______,     _______, _______,                            SH_T(KC_SPC),                       _______, _______, _______, _______, _______  \
+    ),
+    // space for mirror, caps and backslash for special
+    [QWERTY_MIRROR_OVERLAY] = LAYOUT_65_ansi_blocker(
+        _______,     _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, \
+        _______,     _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, MO(QW_M_SP), _______, \
+        MO(QW_M_SP), _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______,          _______, _______, \
+        _______,     _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______,          _______, _______, \
+        _______,     _______, _______,                            SH_T(KC_SPC),                       _______, _______, _______, _______, _______  \
+    ),
+    [DV_M_SP] = LAYOUT_65_ansi_blocker(
+        KC_LBRC, KC_RBRC, KC_BSLS, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, \
+        _______, KC_MINS, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, KC_BSLS, _______, _______, \
+        _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______,          _______, _______, \
+        _______, KC_SLSH, KC_EQL,  _______, _______, _______, _______, _______, _______, _______, _______, _______,          _______, _______, \
+        _______, _______, _______,                            _______,                            _______, _______, _______, _______, _______  \
+    ),
+    [QW_M_SP] = LAYOUT_65_ansi_blocker(
+        KC_MINS, KC_EQL,  KC_BSLS, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, \
+        _______, KC_QUOT, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, KC_BSLS, _______, _______, \
+        _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______,          _______, _______, \
+        _______, KC_LBRC, KC_RBRC, _______, _______, _______, _______, _______, _______, _______, _______, _______,          _______, _______, \
+        _______, _______, _______,                            _______,                            _______, _______, _______, _______, _______  \
+    ),
 
     /*
-    [X] = LAYOUT(
+    [X] = LAYOUT_65_ansi_blocker(
         _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, \
         _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, \
         _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______,          _______, _______, \
