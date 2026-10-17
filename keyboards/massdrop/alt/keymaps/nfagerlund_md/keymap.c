@@ -651,7 +651,7 @@ led_instruction_t led_instructions[] = {
     // set mac indicator if mac
     {
         .flags = LED_FLAG_MATCH_ID | LED_FLAG_MATCH_LAYER | LED_FLAG_USE_RGB,
-        .layer = MIRROR_OVERLAY,
+        .layer = MAC_MODIFIER_OVERLAY,
         .id1 = 0x10000000,
         .r = IND_R, .g = IND_G, .b = IND_B,
     },
