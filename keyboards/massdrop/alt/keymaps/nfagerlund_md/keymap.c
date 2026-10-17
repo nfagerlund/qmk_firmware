@@ -571,6 +571,11 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
     }
 }
 
+// static color for indicator key lights
+#define IND_R 0
+#define IND_G 245
+#define IND_B 210
+
 led_instruction_t led_instructions[] = {
     //LEDs are normally inactive, no processing is performed on them
     //Flags are used in matching criteria for an LED to be active and indicate how to color it
@@ -578,8 +583,78 @@ led_instruction_t led_instructions[] = {
     //LED IDs can be found in config_led.h in the keyboard's directory
     //Examples are below
 
-    //All LEDs use the user's selected pattern (this is the factory default)
-     { .flags = LED_FLAG_USE_ROTATE_PATTERN },
+    // fallback rule: All LEDs use the user's selected pattern (this is the factory default)
+    { .flags = LED_FLAG_USE_ROTATE_PATTERN },
+
+    // leds have ID numbers.
+    // the kb's config_led.c has a map from the kb key matrix layout to IDs, showing where each key can be found.
+    //     (there's also the edge leds, but I won't worry bout that rn.)
+    // the led rules pack the ids into bitwise storage as 6 u32s.
+    //     id0: 0-31
+    //     id1: 32-63
+    //     id2: 64-95
+    //     id3: 96-127
+    //     ...etc
+    //       28   24   20   16   12    8    4    0
+    //     0000 0000 0000 0000 0000 0000 0000 0000
+    //     count leftwards from the least significant on the right.
+    //     in hex, each of 8 digits is a 4-byte chunk. 1111 = f, 0111 = 7...
+    // there are 67 key leds (0-66). the rest are edge... I think. they sometimes say "underglow."
+
+    // fn key (physical page down) always looks special.
+    // #57: bit 25 in id1, 0x02000000
+    {
+        .flags = LED_FLAG_MATCH_ID | LED_FLAG_USE_RGB,
+        .id1 = 0x02000000,
+        .r = IND_R, .g = IND_G, .b = IND_B,
+    },
+    // Layer indicators:
+    // qwerty vs dvorak
+    // q: #16, bit 16 in id0, 0x00010000
+    // d: #33, bit 1 in id1, 0x00000002
+    {
+        .flags = LED_FLAG_MATCH_ID | LED_FLAG_MATCH_LAYER | LED_FLAG_USE_RGB,
+        .layer = QWERTY_WIN,
+        .id0 = 0x00010000,
+        .r = IND_R, .g = IND_G, .b = IND_B,
+    },
+    {
+        .flags = LED_FLAG_MATCH_ID | LED_FLAG_MATCH_LAYER | LED_FLAG_USE_RGB,
+        .layer = DVORAK_WIN,
+        .id1 = 0x00000002,
+        .r = IND_R, .g = IND_G, .b = IND_B,
+    },
+    // mirrorboard on:
+    // space: #61, bit 29 in id1, 0x20000000
+    {
+        .flags = LED_FLAG_MATCH_ID | LED_FLAG_MATCH_LAYER | LED_FLAG_USE_RGB,
+        .layer = MIRROR_OVERLAY,
+        .id1 = 0x20000000,
+        .r = IND_R, .g = IND_G, .b = IND_B,
+    },
+
+    // mac vs win: the annoying one, bc there's no win layer. so I need 3 rules.
+    // win: #59, bit 27 in id1, 0x08000000
+    // cmd: #60, bit 28 in id1, 0x10000000
+    // set win indicator unconditionally
+    {
+        .flags = LED_FLAG_MATCH_ID | LED_FLAG_USE_RGB,
+        .id1 = 0x08000000,
+        .r = IND_R, .g = IND_G, .b = IND_B,
+    },
+    // revert win to rotate pattern if mac
+    {
+        .flags = LED_FLAG_MATCH_ID | LED_FLAG_MATCH_LAYER | LED_FLAG_USE_ROTATE_PATTERN,
+        .layer = MAC_MODIFIER_OVERLAY,
+        .id1 = 0x08000000,
+    },
+    // set mac indicator if mac
+    {
+        .flags = LED_FLAG_MATCH_ID | LED_FLAG_MATCH_LAYER | LED_FLAG_USE_RGB,
+        .layer = MIRROR_OVERLAY,
+        .id1 = 0x10000000,
+        .r = IND_R, .g = IND_G, .b = IND_B,
+    },
 
     //Specific LEDs use the user's selected pattern while all others are off
     // { .flags = LED_FLAG_MATCH_ID | LED_FLAG_USE_ROTATE_PATTERN, .id0 = 0xFFFFFFFF, .id1 = 0xAAAAAAAA, .id2 = 0x55555555, .id3 = 0x11111111 },
@@ -608,5 +683,5 @@ led_instruction_t led_instructions[] = {
     // { .flags = LED_FLAG_MATCH_ID | LED_FLAG_USE_ROTATE_PATTERN , .id2 = 0xFFFFFFF8, .id3 = 0x000003FF },
 
     //end must be set to 1 to indicate end of instruction set
-     { .end = 1 }
+    { .end = 1 }
 };
