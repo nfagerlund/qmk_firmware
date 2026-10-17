@@ -284,24 +284,59 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
                 SEND_STRING(SS_TAP(X_ENTER)SS_TAP(X_HOME)SS_TAP(X_LEFT));
             }
             return false;
-        case NF_FLIP:
-            // ctrl + fn + space: cycle default layers.
-            // (ctrl and fn are "as labeled," which is what the weird
-            // MODS_OTHER_FN thing is about -- fn switches sides on mac qwerty,
-            // because I prefer it that way.)
-            if (record->event.pressed && MODS_OTHER_FN) {
-                switch(biton32(default_layer_state)) {
-                    case DVORAK_WIN:
-                        default_layer_set(1UL<<QWERTY_MAC);
-                        break;
-                    default:
-                        default_layer_set(1UL<<DVORAK_WIN);
-                }
-
-                // or:
-                // set_single_persistent_default_layer(DVORAK_WIN);
+        case NF_DV:
+            if (record->event.pressed) {
+                // we want set_single_default_layer, but it doesn't exist yet in this timeline
+                default_layer_set(1UL<<DVORAK_WIN);
+                layer_off(DVORAK_MIRROR_OVERLAY);
             }
             return false;
+        case NF_QW:
+            if (record->event.pressed) {
+                default_layer_set(1UL<<QWERTY_WIN);
+                layer_off(QWERTY_MIRROR_OVERLAY);
+            }
+            return false;
+        case NF_DVMR:
+            if (record->event.pressed) {
+                default_layer_set(1UL<<DVORAK_WIN);
+                layer_on(DVORAK_MIRROR_OVERLAY);
+            }
+            return false;
+        case NF_QWMR:
+            if (record->event.pressed) {
+                default_layer_set(1UL<<QWERTY_WIN);
+                layer_on(QWERTY_MIRROR_OVERLAY);
+            }
+            return false;
+        case NF_MAC:
+            if (record->event.pressed) {
+                layer_on(MAC_MODIFIER_OVERLAY);
+            }
+            return false;
+        case NF_WIN:
+            if (record->event.pressed) {
+                layer_off(MAC_MODIFIER_OVERLAY);
+            }
+            return false;
+        // case NF_FLIP:
+        //     // ctrl + fn + space: cycle default layers.
+        //     // (ctrl and fn are "as labeled," which is what the weird
+        //     // MODS_OTHER_FN thing is about -- fn switches sides on mac qwerty,
+        //     // because I prefer it that way.)
+        //     if (record->event.pressed && MODS_OTHER_FN) {
+        //         switch(biton32(default_layer_state)) {
+        //             case DVORAK_WIN:
+        //                 default_layer_set(1UL<<QWERTY_MAC);
+        //                 break;
+        //             default:
+        //                 default_layer_set(1UL<<DVORAK_WIN);
+        //         }
+
+        //         // or:
+        //         // set_single_persistent_default_layer(DVORAK_WIN);
+        //     }
+        //     return false;
 
         case L_BRI:
             if (record->event.pressed) {
