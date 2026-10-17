@@ -535,6 +535,9 @@ static void led_matrix_massdrop_config_override(int i)
     float bo = 0;
     float po;
     layer_state_t combined_layer_state = layer_state | default_layer_state;
+    // note that default_layer_state starts uninitialized and there's a hardcoded fallback
+    // to layer 0; see layer_switch_get_layer in action_layer.c. So you might have "no layers"
+    // active.
 
     if (led_animation_circular) {
         // TODO: should use min/max values from LED configuration instead of
@@ -562,7 +565,7 @@ static void led_matrix_massdrop_config_override(int i)
         while (!led_cur_instruction->end) {
             // Check if this applies to current layer
             if ((led_cur_instruction->flags & LED_FLAG_MATCH_LAYER) &&
-                !(led_cur_instruction->layer & combined_layer_state)) {
+                !( 1UL<<(led_cur_instruction->layer) & combined_layer_state)) {
                 goto next_iter;
             }
 
