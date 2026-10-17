@@ -358,9 +358,12 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
             }
             return false;
         case NF_STAR:
-            // subtle: inspect layers to decide which layers to activate, or else deactivate all of em.
+            // subtle: inspect persistent layers to decide which special layers to momentarily
+            // activate, or else deactivate all of em.
             if (record->event.pressed) {
-                bool is_dvorak = layer_state_is(DVORAK_WIN);
+                // ah right: layer_state and default_layer_state are totally orthogonal, and here in
+                // the past we have worse tools for one of em.
+                bool is_dvorak = biton32(default_layer_state) == DVORAK_WIN;
                 // dvorak or qwerty?
                 if (is_dvorak) {
                     layer_on(DVORAK_MIRROR_EXTRA);
@@ -386,24 +389,6 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
                 layer_off(MAC_QWERTY_CTRL_NAV);
             }
             return false;
-        // case NF_FLIP:
-        //     // ctrl + fn + space: cycle default layers.
-        //     // (ctrl and fn are "as labeled," which is what the weird
-        //     // MODS_OTHER_FN thing is about -- fn switches sides on mac qwerty,
-        //     // because I prefer it that way.)
-        //     if (record->event.pressed && MODS_OTHER_FN) {
-        //         switch(biton32(default_layer_state)) {
-        //             case DVORAK_WIN:
-        //                 default_layer_set(1UL<<QWERTY_MAC);
-        //                 break;
-        //             default:
-        //                 default_layer_set(1UL<<DVORAK_WIN);
-        //         }
-
-        //         // or:
-        //         // set_single_persistent_default_layer(DVORAK_WIN);
-        //     }
-        //     return false;
 
         case L_BRI:
             if (record->event.pressed) {
