@@ -534,7 +534,7 @@ static void led_matrix_massdrop_config_override(int i)
     float go = 0;
     float bo = 0;
     float po;
-    uint8_t highest_active_layer = biton32(layer_state);
+    layer_state_t combined_layer_state = layer_state | default_layer_state;
 
     if (led_animation_circular) {
         // TODO: should use min/max values from LED configuration instead of
@@ -562,7 +562,7 @@ static void led_matrix_massdrop_config_override(int i)
         while (!led_cur_instruction->end) {
             // Check if this applies to current layer
             if ((led_cur_instruction->flags & LED_FLAG_MATCH_LAYER) &&
-                (led_cur_instruction->layer != highest_active_layer)) {
+                !(led_cur_instruction->layer & combined_layer_state)) {
                 goto next_iter;
             }
 
