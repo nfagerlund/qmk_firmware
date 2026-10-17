@@ -193,6 +193,21 @@ uint16_t get_event_keycode(keyevent_t event) {
         return keymap_key_to_keycode(layer_switch_get_layer(event.key), event.key);
 }
 
+// I reeeeally don't want to run around updating every call just to enable one
+// ported feature...
+uint16_t get_record_keycode_without_layer_cache_update(keyrecord_t *record) {
+    keyevent_t event = record->event;
+#if !defined(NO_ACTION_LAYER) && !defined(STRICT_LAYER_RELEASE)
+    /* TODO: Use store_or_get_action() or a similar function. */
+    if (!disable_action_cache) {
+        uint8_t layer;
+        layer = read_source_layers_cache(event.key);
+        return keymap_key_to_keycode(layer, event.key);
+    } else
+#endif
+        return keymap_key_to_keycode(layer_switch_get_layer(event.key), event.key);
+}
+
 /* Main keycode processing function. Hands off handling to other functions,
  * then processes internal Quantum keycodes, then processes ACTIONs.
  */

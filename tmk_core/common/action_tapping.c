@@ -4,6 +4,7 @@
 #include "action_layer.h"
 #include "action_tapping.h"
 #include "keycode.h"
+#include "quantum.h"
 #include "timer.h"
 
 #ifdef DEBUG_ACTION
@@ -82,6 +83,25 @@ void action_tapping_process(keyrecord_t record) {
     }
 }
 
+// wow we're on a variables diet, huh? ok...
+#    define TAP_DEFINE_KEYCODE const uint16_t tapping_keycode = get_record_keycode_without_layer_cache_update(&tapping_key)
+
+// I think this is just a placeholder for the user-defined func.
+#    ifdef HOLD_ON_OTHER_KEY_PRESS_PER_KEY
+__attribute__((weak)) bool get_hold_on_other_key_press(uint16_t keycode, keyrecord_t *record) {
+    return false;
+}
+#    endif
+
+#    ifdef HOLD_ON_OTHER_KEY_PRESS_PER_KEY
+#        define TAP_GET_HOLD_ON_OTHER_KEY_PRESS get_hold_on_other_key_press(tapping_keycode, &tapping_key)
+#    elif defined(HOLD_ON_OTHER_KEY_PRESS)
+#        define TAP_GET_HOLD_ON_OTHER_KEY_PRESS true
+#    else
+#        define TAP_GET_HOLD_ON_OTHER_KEY_PRESS false
+#    endif
+
+
 /** \brief Tapping
  *
  * Rule: Tap key is typed(pressed and released) within TAPPING_TERM.
@@ -90,6 +110,11 @@ void action_tapping_process(keyrecord_t record) {
 /* return true when key event is processed or consumed. */
 bool process_tapping(keyrecord_t *keyp) {
     keyevent_t event = keyp->event;
+
+    // enable a local var...
+    #    if defined(HOLD_ON_OTHER_KEY_PRESS_PER_KEY)
+        TAP_DEFINE_KEYCODE;
+    #    endif
 
     // if tapping
     if (IS_TAPPING_PRESSED()) {
@@ -149,6 +174,14 @@ bool process_tapping(keyrecord_t *keyp) {
                     // set interrupted flag when other key preesed during tapping
                     if (event.pressed) {
                         tapping_key.tap.interrupted = true;
+                        if (TAP_GET_HOLD_ON_OTHER_KEY_PRESS) {
+                            // Settle the tapping key as *held*, since
+                            // HOLD_ON_OTHER_KEY_PRESS is enabled for this key.
+                            debug("Tapping: End. No tap. Interfered by pressed key\n");
+                            process_record(&tapping_key);
+                            tapping_key = (keyrecord_t){0};
+                            debug_tapping_key();
+                        }
                     }
                     // enqueue
                     return false;

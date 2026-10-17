@@ -231,6 +231,7 @@ void     matrix_init_user(void);
 void     matrix_scan_user(void);
 uint16_t get_record_keycode(keyrecord_t *record);
 uint16_t get_event_keycode(keyevent_t event);
+uint16_t get_record_keycode_without_layer_cache_update(keyrecord_t *record);
 bool     process_action_kb(keyrecord_t *record);
 bool     process_record_kb(uint16_t keycode, keyrecord_t *record);
 bool     process_record_user(uint16_t keycode, keyrecord_t *record);
