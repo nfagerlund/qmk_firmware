@@ -263,10 +263,19 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     */
 };
 
+uint16_t get_tapping_term(uint16_t keycode, keyrecord_t *record) {
+    switch (keycode) {
+        case SH_T(KC_SPC):
+            return MIRROR_TAPPING_TERM;
+        default:
+            return TAPPING_TERM;
+    }
+}
+
 #define MODS_SHIFT (get_mods() & MOD_BIT(KC_LSHIFT) || get_mods() & MOD_BIT(KC_RSHIFT))
 #define MODS_CTRL (get_mods() & MOD_BIT(KC_LCTL) || get_mods() & MOD_BIT(KC_RCTRL))
 #define MODS_ALT (get_mods() & MOD_BIT(KC_LALT) || get_mods() & MOD_BIT(KC_RALT))
-#define MODS_OTHER_FN (get_mods() & MOD_BIT(KC_RALT) || get_mods() & MOD_BIT(KC_LCTL))
+// #define MODS_OTHER_FN (get_mods() & MOD_BIT(KC_RALT) || get_mods() & MOD_BIT(KC_LCTL))
 
 bool process_record_user(uint16_t keycode, keyrecord_t *record) {
     static uint32_t key_timer;
