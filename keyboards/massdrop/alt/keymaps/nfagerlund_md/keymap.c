@@ -7,10 +7,14 @@ enum nf_layers {
     MAC_MODIFIER_OVERLAY,  // changes the modifier keys to be mac style, for either base layout.
     F_ALL, // modifier layer. function and meta keys.
     CAP_WIN,    // modifier layer. Makes capslock on Windows act sorta like ctrl on Mac. always uses dvorak key locations.
-    DVORAK_MIRROR_OVERLAY, // Enable mirror-space and special ctrl-like stuff for dvorak.
-    QWERTY_MIRROR_OVERLAY, // Enable mirror-space and special ctrl-like stuff for qwerty.
-    DV_M_SP, // Dvorak mirror special. modifier layer. mirrorboard fixups and ctrl nav keys.
-    QW_M_SP, // Qwerty mirror special. modifier layer. mirrorboard fixups and ctrl nav keys.
+    MIRROR_OVERLAY, // Enable mirror-space and special ctrl-like stuff.
+    DVORAK_MIRROR_EXTRA, // Dvorak mirror special. modifier layer. mirrorboard fixups and ctrl nav keys.
+    QWERTY_MIRROR_EXTRA, // Qwerty mirror special. modifier layer. mirrorboard fixups and ctrl nav keys.
+    WIN_CTRL_NAV, // mirrorboard ctrlnav; outputs win-like values; always uses dvorak letter positions.
+    MAC_DVORAK_CTRL_NAV, // mirrorboard ctrlnav; outputs ctrl-keys; outputs "real" intended letters, bc we're pretending to be qwerty.
+    MAC_QWERTY_CTRL_NAV, // mirrorboard ctrlnav; outputs ctrl-keys; outputs weird letters that the os will turn into
+                         // the intended letters once it runs through the dvorak input mode, so I can use dvorak hand
+                         // positions regardless.
 };
 
 // Tricky custom keycodes
@@ -42,6 +46,7 @@ enum alt_keycodes {
 
     NF_KILL,               // Select to end of line, then ctrl+x (windows)
     NF_CTLO,               // Insert newline after cursor (windows)
+    NF_STAR,               // Extra character access and ctrlnav in mirrorboards
 
     NF_DV,                 // Switch to Dvorak, no mirror
     NF_QW,                 // Switch to Qwerty, no mirror
@@ -222,33 +227,48 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
         _______, _______, _______,                            _______,                            _______, _______, _______, _______, _______  \
     ),
     // space for mirror, caps and backslash for special
-    [DVORAK_MIRROR_OVERLAY] = LAYOUT_65_ansi_blocker(
-        _______,     _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, \
-        _______,     _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, MO(DV_M_SP), _______, \
-        MO(DV_M_SP), _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______,          _______, _______, \
-        _______,     _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______,          _______, _______, \
-        _______,     _______, _______,                            SH_T(KC_SPC),                       _______, _______, _______, _______, _______  \
+    [MIRROR_OVERLAY] = LAYOUT_65_ansi_blocker(
+        _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, \
+        _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, NF_STAR, _______, \
+        NF_STAR, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______,          _______, _______, \
+        _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______,          _______, _______, \
+        _______, _______, _______,                            SH_T(KC_SPC),                       _______, _______, _______, _______, _______  \
     ),
-    // space for mirror, caps and backslash for special
-    [QWERTY_MIRROR_OVERLAY] = LAYOUT_65_ansi_blocker(
-        _______,     _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, \
-        _______,     _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, MO(QW_M_SP), _______, \
-        MO(QW_M_SP), _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______,          _______, _______, \
-        _______,     _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______,          _______, _______, \
-        _______,     _______, _______,                            SH_T(KC_SPC),                       _______, _______, _______, _______, _______  \
-    ),
-    [DV_M_SP] = LAYOUT_65_ansi_blocker(
+    // star: extra character access in mirror layouts
+    [DVORAK_MIRROR_EXTRA] = LAYOUT_65_ansi_blocker(
         KC_LBRC, KC_RBRC, KC_BSLS, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, \
         _______, KC_MINS, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, KC_BSLS, _______, _______, \
         _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______,          _______, _______, \
         _______, KC_SLSH, KC_EQL,  _______, _______, _______, _______, _______, _______, _______, _______, _______,          _______, _______, \
         _______, _______, _______,                            _______,                            _______, _______, _______, _______, _______  \
     ),
-    [QW_M_SP] = LAYOUT_65_ansi_blocker(
+    [QWERTY_MIRROR_EXTRA] = LAYOUT_65_ansi_blocker(
         KC_MINS, KC_EQL,  KC_BSLS, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, \
         _______, KC_QUOT, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, KC_BSLS, _______, _______, \
         _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______,          _______, _______, \
         _______, KC_LBRC, KC_RBRC, _______, _______, _______, _______, _______, _______, _______, _______, _______,          _______, _______, \
+        _______, _______, _______,                            _______,                            _______, _______, _______, _______, _______  \
+    ),
+    // star: ctrlnav in mirror layouts. Always uses dvorak letter positions.
+    [WIN_CTRL_NAV] = LAYOUT_65_ansi_blocker(
+        _______,   _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, C(KC_TAB), _______, \
+        C(KC_TAB), _______, _______, _______, KC_UP,   KC_LEFT, KC_RGHT, KC_UP,   _______, _______, _______, _______, _______, _______, _______, \
+        _______,   KC_HOME, NF_CTLO, KC_END,  KC_DOWN, KC_DEL,  KC_DEL,  KC_DOWN, KC_END,  NF_CTLO, KC_HOME, _______,          _______, _______, \
+        _______,   _______, _______, _______, NF_KILL, _______, NF_KILL, _______, _______, _______, _______, _______,          _______, _______, \
+        _______,   _______, _______,                            _______,                            _______, _______, _______, _______, _______  \
+    ),
+    [MAC_DVORAK_CTRL_NAV] = LAYOUT_65_ansi_blocker(
+        _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, C(KC_TAB), _______, \
+        C(KC_TAB), _______, _______, C(KC_T), C(KC_P), C(KC_B), C(KC_F), C(KC_P), C(KC_T), _______, _______, _______, _______, _______, _______, \
+        _______, C(KC_A), C(KC_O), C(KC_E), C(KC_N), C(KC_D), C(KC_D), C(KC_N), C(KC_E), C(KC_O), C(KC_A), _______,          _______, _______, \
+        _______, _______, _______, _______, C(KC_K), _______, C(KC_K), _______, _______, _______, _______, _______,          _______, _______, \
+        _______, _______, _______,                            _______,                            _______, _______, _______, _______, _______  \
+    ),
+    [MAC_QWERTY_CTRL_NAV] = LAYOUT_65_ansi_blocker(
+        _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, C(KC_TAB), _______, \
+        C(KC_TAB), _______, _______, C(KC_K), C(KC_R), C(KC_N), C(KC_Y), C(KC_R), C(KC_K), _______, _______, _______, _______, _______, _______, \
+        _______, C(KC_A), C(KC_S), C(KC_D), C(KC_L), C(KC_H), C(KC_H), C(KC_L), C(KC_D), C(KC_S), C(KC_A), _______,          _______, _______, \
+        _______, _______, _______, _______, C(KC_V), _______, C(KC_V), _______, _______, _______, _______, _______,          _______, _______, \
         _______, _______, _______,                            _______,                            _______, _______, _______, _______, _______  \
     ),
 
@@ -297,25 +317,25 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
             if (record->event.pressed) {
                 // we want set_single_default_layer, but it doesn't exist yet in this timeline
                 default_layer_set(1UL<<DVORAK_WIN);
-                layer_off(DVORAK_MIRROR_OVERLAY);
+                layer_off(MIRROR_OVERLAY);
             }
             return false;
         case NF_QW:
             if (record->event.pressed) {
                 default_layer_set(1UL<<QWERTY_WIN);
-                layer_off(QWERTY_MIRROR_OVERLAY);
+                layer_off(MIRROR_OVERLAY);
             }
             return false;
         case NF_DVMR:
             if (record->event.pressed) {
                 default_layer_set(1UL<<DVORAK_WIN);
-                layer_on(DVORAK_MIRROR_OVERLAY);
+                layer_on(MIRROR_OVERLAY);
             }
             return false;
         case NF_QWMR:
             if (record->event.pressed) {
                 default_layer_set(1UL<<QWERTY_WIN);
-                layer_on(QWERTY_MIRROR_OVERLAY);
+                layer_on(MIRROR_OVERLAY);
             }
             return false;
         case NF_MAC:
