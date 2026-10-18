@@ -1,5 +1,51 @@
 #include QMK_KEYBOARD_H
 
+// Probably overdue for some docs on this.
+//
+// Fn: the all-important Fn key is on the physical pg-down key, right above the
+// right arrow. It's NOT on the labeled key, which I wanted for modifiers.
+// The labeled pg-up is actually pg-down, and Fn + pg-down gives pg-up.
+//
+// Modes: There's four mutually-exclusive main modes, plus a minor mode for
+// the modifier key layout. Modes are controlled with Fn plus the cluster of
+// keys beside the right shift key.
+//
+// - Fn + / (SE) -- hard Dvorak (default) -- [lights D]
+// - Fn + . (SW) -- Qwerty -- [lights Q]
+// - Fn + ' (NE) -- hard Dvorak with mirrorboard -- [lights D + space]
+// - Fn + ; (NW) -- Qwerty with mirrorboard -- [lights Q + space]
+//
+// - Fn + , -- Windows modifiers (ctl win alt; alt ctl; hacked caps lock) (default)
+// - Fn + m -- Mac modifiers (ctl opt cmd; cmd opt; real caps lock) -- [lights left alt]
+//
+// Esc: the labeled esc key is actually `/~, per muscle memory. To get esc,
+// smash ` + 1 at the same time.
+//
+// Hacked caps: In the windows modifier scheme, I set the caps lock key to have
+// some of the comforts of home (mac). In short, it gives ctrl + [ae, np, fb, d,
+// k, o] (all using dvorak positioning, regardless of layout), plus easy access
+// to the f-keys. Mac mode just uses real caps lock, because I can remap it to
+// ctrl in software with no bs.
+//
+// Mirrorboard: This swaps the sides of the keyboard when spacebar is held, so
+// the left index finger does what the right usually does, etc. I started using
+// it after breaking my right pinkie. The big gotchas are:
+//
+// - Ctrl-nav shortcuts: I hijacked caps lock (L) and backslash (R) to implement
+//   a modified Dvorak layout of all the important ones. The only unexpected ones
+//   are N, B, and T.
+// - Left: missing dvorak Z (slash). Just reach up, it's on `
+// - Left: missing symbols: use the repurposed caps lock key.
+//     - `: [ (qw -)
+//     - 1: ] (qw =)
+//     - 2: \
+//     - ' (qw Q): - (qw ')
+//     - ; (qw Z): / (qw [)
+//     - q (qw X): = (qw ])
+// - Right: missing backslash: use backslash plus the key right next to it. I
+//   *really* wanted my ctrl-nav, sorry.
+// - Right side is untested bc my hand's in a splint lol.
+
 // Layer names
 enum nf_layers {
     DVORAK_WIN, // base layout (default)
@@ -68,6 +114,7 @@ enum alt_keycodes {
 // Play/pause: [ + ] (as marked)
 // Track back: P + [ (as marked)
 // Track forward: ] + \ (as marked)
+// TODO: double numbers for function keys (1 + 2 = f1 ... '=' + bksp = f12)
 const uint16_t PROGMEM combo_grv1[]  = {KC_GRV, KC_1, COMBO_END};
 const uint16_t PROGMEM combo_double_bracket_qw[] = {KC_LBRC, KC_RBRC, COMBO_END};
 const uint16_t PROGMEM combo_double_bracket_dv[] = {KC_SLSH, KC_EQL, COMBO_END};
