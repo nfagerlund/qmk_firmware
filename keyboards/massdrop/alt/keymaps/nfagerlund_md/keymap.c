@@ -38,7 +38,7 @@
 // - Left: missing symbols: use the repurposed caps lock key.
 //     - `: [ (qw -)
 //     - 1: ] (qw =)
-//     - 2: \
+//     - 2: backslash
 //     - ' (qw Q): - (qw ')
 //     - ; (qw Z): / (qw [)
 //     - q (qw X): = (qw ])
