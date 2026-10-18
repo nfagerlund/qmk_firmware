@@ -142,6 +142,12 @@ bool process_combo(uint16_t keycode, keyrecord_t *record) {
         return true;
     }
 
+    // partial backport from main -NF
+    #ifdef COMBO_ONLY_FROM_LAYER
+        /* Only check keycodes from one layer. */
+        keycode = keymap_key_to_keycode(COMBO_ONLY_FROM_LAYER, record->event.key);
+    #endif
+
     for (current_combo_index = 0; current_combo_index < COMBO_COUNT; ++current_combo_index) {
         combo_t *combo = &key_combos[current_combo_index];
         is_combo_key |= process_single_combo(combo, keycode, record);
