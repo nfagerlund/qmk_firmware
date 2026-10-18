@@ -109,29 +109,48 @@ enum alt_keycodes {
 
 #define TG_NKRO MAGIC_TOGGLE_NKRO //Toggle 6KRO / NKRO mode
 
-// Combos
-// "Smash escape:" hit `/~ and 1 at the same time to type Esc without using fn.
-// Play/pause: [ + ] (as marked)
-// Track back: P + [ (as marked)
-// Track forward: ] + \ (as marked)
-// TODO: double numbers for function keys (1 + 2 = f1 ... '=' + bksp = f12)
+// Combos! These all use the marked qwerty keycodes, bc I set `COMBO_ONLY_FROM_LAYER 1`.
+// Escape: `/~ + 1
+// Play/pause: [ + ]
+// Track back: P + [
+// Track forward: ] + bkslash
+// Function keys: Number row key + the qwerty row key below it
+
 const uint16_t PROGMEM combo_grv1[]  = {KC_GRV, KC_1, COMBO_END};
 const uint16_t PROGMEM combo_double_bracket_qw[] = {KC_LBRC, KC_RBRC, COMBO_END};
-const uint16_t PROGMEM combo_double_bracket_dv[] = {KC_SLSH, KC_EQL, COMBO_END};
 const uint16_t PROGMEM combo_bracket_p_qw[] = {KC_P, KC_LBRC, COMBO_END};
-const uint16_t PROGMEM combo_bracket_p_dv[] = {KC_L, KC_SLSH, COMBO_END};
 const uint16_t PROGMEM combo_bracket_bs_qw[] = {KC_RBRC, KC_BSLS, COMBO_END};
-const uint16_t PROGMEM combo_bracket_bs_dv[] = {KC_EQL, KC_BSLS, COMBO_END};
+const uint16_t PROGMEM combo_1_down[] = {KC_1, KC_Q, COMBO_END};
+const uint16_t PROGMEM combo_2_down[] = {KC_2, KC_W, COMBO_END};
+const uint16_t PROGMEM combo_3_down[] = {KC_3, KC_E, COMBO_END};
+const uint16_t PROGMEM combo_4_down[] = {KC_4, KC_R, COMBO_END};
+const uint16_t PROGMEM combo_5_down[] = {KC_5, KC_T, COMBO_END};
+const uint16_t PROGMEM combo_6_down[] = {KC_6, KC_Y, COMBO_END};
+const uint16_t PROGMEM combo_7_down[] = {KC_7, KC_U, COMBO_END};
+const uint16_t PROGMEM combo_8_down[] = {KC_8, KC_I, COMBO_END};
+const uint16_t PROGMEM combo_9_down[] = {KC_9, KC_O, COMBO_END};
+const uint16_t PROGMEM combo_0_down[] = {KC_0, KC_P, COMBO_END};
+const uint16_t PROGMEM combo_11_down[] = {KC_MINS, KC_LBRC, COMBO_END};
+const uint16_t PROGMEM combo_12_down[] = {KC_EQL, KC_RBRC, COMBO_END};
 
 // Assign combos
 combo_t key_combos[COMBO_COUNT] = {
     COMBO(combo_grv1, KC_ESC),
     COMBO(combo_double_bracket_qw, KC_MPLY),
-    COMBO(combo_double_bracket_dv, KC_MPLY),
     COMBO(combo_bracket_p_qw, KC_MPRV),
-    COMBO(combo_bracket_p_dv, KC_MPRV),
     COMBO(combo_bracket_bs_qw, KC_MNXT),
-    COMBO(combo_bracket_bs_dv, KC_MNXT),
+    COMBO(combo_1_down, KC_F1),
+    COMBO(combo_2_down, KC_F2),
+    COMBO(combo_3_down, KC_F3),
+    COMBO(combo_4_down, KC_F4),
+    COMBO(combo_5_down, KC_F5),
+    COMBO(combo_6_down, KC_F6),
+    COMBO(combo_7_down, KC_F7),
+    COMBO(combo_8_down, KC_F8),
+    COMBO(combo_9_down, KC_F9),
+    COMBO(combo_0_down, KC_F10),
+    COMBO(combo_11_down, KC_F11),
+    COMBO(combo_12_down, KC_F12),
 };
 
 // Set up swap-hands config -- this applies the swapped key positions to whatever the
