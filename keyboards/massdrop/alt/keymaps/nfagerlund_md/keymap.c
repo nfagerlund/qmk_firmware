@@ -66,6 +66,9 @@ enum nf_layers {
 // Override the default layer state on startup, so we aren't relying on the magic fallback to 0.
 void keyboard_post_init_user(void) {
     default_layer_set(1UL<<DVORAK_WIN);
+    gcr_desired = 50; // out of max of 160
+    led_edge_brightness = 0.3; // 0.0f to 1.0f
+    led_animation_id = 2; // trans rights
 }
 
 // Tricky custom keycodes
